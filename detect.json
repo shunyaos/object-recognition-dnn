@@ -1,0 +1,42 @@
+{
+    "prototxt": "MobileNetSSD_deploy.prototxt",
+    "caffemodel": "MobileNetSSD_deploy.caffemodel",
+    "classes": [
+        "background",
+        "aeroplane",
+        "bicycle",
+        "bird",
+        "boat",
+        "bottle",
+        "bus",
+        "car",
+        "cat",
+        "chair",
+        "cow",
+        "diningtable",
+        "dog",
+        "horse",
+        "motorbike",
+        "person",
+        "pottedplant",
+        "sheep",
+        "sofa",
+        "train",
+        "tvmonitor"
+    ],
+    "video_input":"v4l2src device=/dev/video0 ! video/x-raw,width=640,height=480,framerate=30/1  !  videoconvert ! video/x-raw,width=640,height=480,format=BGR ! appsink",
+    "video_input_simple": "v4l2src device=/dev/video0 do-timestamp=true ! video/x-raw, width=640, height=480, framerate=15/1 ! videoconvert ! appsink",
+    "video_output":"appsrc ! videoconvert ! v4l2h264enc extra-controls=\"encode,frame_level_rate_control_enable=1,video_bitrate=8380416\" ! h264parse ! mp4mux ! filesink location=detect.mp4",
+    "video_output_web":   "appsrc ! videoconvert ! v4l2h264enc extra-controls=\"encode,frame_level_rate_control_enable=1,video_bitrate=8380416\" ! h264parse ! mpegtsmux ! hlssink max-files=8 playlist-root=\"http://0.0.0.0/hls\" playlist-location=\"/var/www/html/hls/stream0.m3u8\" location=\"/var/www/html/hls/fragment%06d.ts\" target-duration=30",
+    "image_output": "detected",
+    "batch_size": "4",
+    "base_confidence": "60",
+    "detect_classes": {
+        "person": "40",
+        "bottle": "80",
+        "car": "80"
+    },
+    "detect_timeout": "10",
+    "detect_action": "/bin/echo \"We have detected: {0} ({1:.2f}% confidence). Please check {2}.\"",
+    "statistics": true
+}
